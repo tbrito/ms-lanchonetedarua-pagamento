@@ -5,6 +5,7 @@ import br.com.lanchonetedarua.pagamento.domain.model.PagamentoCartaoCredito
 import br.com.lanchonetedarua.pagamento.domain.model.valueobject.FormaPagamento
 import br.com.lanchonetedarua.pagamento.domain.model.valueobject.InfoPagamento
 import br.com.lanchonetedarua.pagamento.domain.model.valueobject.StatusPagamento
+import br.com.lanchonetedarua.pagamento.domain.event.PagamentoEventPublisher
 import br.com.lanchonetedarua.pagamento.domain.repository.PagamentoRepository
 
 import io.micronaut.transaction.annotation.ReadOnly
@@ -18,12 +19,15 @@ class PagamentoService {
     @Inject
     private PagamentoRepository pagamentoRepository
 
+    @Inject
+    private PagamentoEventPublisher pagamentoEventPublisher
+
     @Transactional
     Pagamento criarPagamento(InfoPagamento infoPagamento) {
         Pagamento novoPagamento = criarNovoPagamento(infoPagamento)
         Pagamento pagamento = this.pagamentoRepository.criarPagamento(novoPagamento)
 
-        // TODO poderia chamar ws externo de pagamento, como MercadoPago por exemplo
+        this.pagamentoEventPublisher.notificaServiceExternoPagamento(pagamento)
 
         return pagamento
     }
@@ -32,7 +36,7 @@ class PagamentoService {
     Pagamento atualizarStatusPagamento(String pagamentoId, StatusPagamento statusPagamento) {
         Pagamento pagamento = this.pagamentoRepository.atualizarStatusPagamento(pagamentoId, statusPagamento)
 
-        // TODO chamar microservico pedido para atualizar status pagamento
+        this.pagamentoEventPublisher.notificaServiceInternoPagamento(pagamento)
 
         return pagamento
     }
