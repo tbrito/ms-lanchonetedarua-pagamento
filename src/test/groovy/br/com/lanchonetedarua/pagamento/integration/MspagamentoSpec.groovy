@@ -1,4 +1,4 @@
-package br.com.lanchonetedarua.pagamento
+package br.com.lanchonetedarua.pagamento.integration
 
 import io.micronaut.runtime.EmbeddedApplication
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
