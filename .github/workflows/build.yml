@@ -14,13 +14,17 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Install Make
-        run: apk --no-cache add make
+        uses: actions/checkout@v4
 
       - name: Build Application
-        run: make build-app
+        run: |
+          ./gradlew build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build/libs
 
   build-docker:
     runs-on: ubuntu-latest
@@ -29,10 +33,14 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Install Make
-        run: sudo apt update && sudo apt install make
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: build/libs
 
       - name: Build Docker Image
-        run: make build-docker
+        run: |
+          docker build -t lanchonete-da-rua-pagamento .
