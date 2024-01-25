@@ -7,6 +7,7 @@ import br.com.lanchonetedarua.pagamento.driver.web.dtos.PagamentoConsultaDTO
 import br.com.lanchonetedarua.pagamento.driver.web.dtos.PagamentoStatusDTO
 
 import groovy.transform.CompileStatic
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
@@ -26,9 +27,10 @@ class PagamentoController {
     @Post
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Cria um novo pagamento", description = "Cria um novo pagamento para o pedido")
-    PagamentoConsultaDTO criarPagamento(@Body InfoPagamento infoPagamento) {
+    HttpResponse<PagamentoConsultaDTO> criarPagamento(@Body InfoPagamento infoPagamento) {
         Pagamento pagamento = this.pagamentoService.criarPagamento(infoPagamento)
-        return toPagamentoConsulta(pagamento)
+        HttpResponse.created(toPagamentoConsulta(pagamento))
+        return HttpResponse.created(toPagamentoConsulta(pagamento))
     }
 
     @Post("/status-atualizacao")

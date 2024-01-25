@@ -40,7 +40,7 @@ class PagamentoTest extends Specification {
     def "deve criar um pagamento do tipo cartao de credito"() {
         given:
         def infoPagamento = new InfoPagamento(
-                pedidoId: 1,
+                pedidoId: "ABC123",
                 valorTotal: 10,
                 formaPagamento: CARTAO_CREDITO,
                 numeroCartao: "1234 1234 1234",
