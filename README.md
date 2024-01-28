@@ -41,3 +41,5 @@ Este é um microserviço de pagamentos para a Lanchonete da Rua, construído com
    export JDBC_USER=lanchonetedaruapagamento
    export JDBC_PASSWORD=lanchonetedaruapagamento
    export JDBC_DRIVER=org.postgresql.Driver
+
+   
