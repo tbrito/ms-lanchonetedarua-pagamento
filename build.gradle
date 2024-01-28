@@ -72,9 +72,9 @@ micronaut {
 }
 
 sonar {
-    properties {
-        property "sonar.projectKey", "renanhsilva_ms-lanchonetedarua-pagamento"
-        property "sonar.organization", "renanhsilva"
-        property "sonar.host.url", "https://sonarcloud.io"
-    }
+  properties {
+    property "sonar.projectKey", "lanchonetedarua_pagamento"
+    property "sonar.organization", "lanchonetedarua"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
 }
