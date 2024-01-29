@@ -73,7 +73,7 @@ micronaut {
 
 sonar {
   properties {
-    property "sonar.projectKey", "lanchonetedarua_pagamento"
+    property "sonar.projectKey", "pagamento"
     property "sonar.organization", "lanchonetedarua"
     property "sonar.host.url", "https://sonarcloud.io"
   }
