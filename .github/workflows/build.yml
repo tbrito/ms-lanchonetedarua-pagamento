@@ -26,45 +26,44 @@ jobs:
           name: build-artifacts
           path: build/libs
 
-  build-docker:
-    runs-on: ubuntu-latest
-
+  build-and-deploy:
     needs: build-app
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: build/libs
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          #aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: us-east-1
-          
-      - name: Build Docker Image
-        run: |
-          docker build -t ms-lanchonetedarua-pagamento:latest .
-        env:
-          AWS_DEFAULT_REGION: us-east-1
-
-      - name: Push Docker image to ECR
-        run: |
-          # Login ECR
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 339713163875.dkr.ecr.us-east-1.amazonaws.com
-          
-          # Image tag
-          docker tag ms-lanchonetedarua-pagamento:latest 339713163875.dkr.ecr.us-east-1.amazonaws.com/lanchonetedarua:ms-lanchonetedarua-pagamento-latest
-          
-          # Publish image to ecr
-          docker push 339713163875.dkr.ecr.us-east-1.amazonaws.com/lanchonetedarua:ms-lanchonetedarua-pagamento-latest
-        env:
-          AWS_DEFAULT_REGION: us-east-1
+    # checkout the repo
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@main
     
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+        path: build/libs
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Build and push image'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/ms-lanchonetedarua-pagamento:${{ github.sha }}
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/ms-lanchonetedarua-pagamento:${{ github.sha }}
+
+    - name: 'Deploy to Azure Container Instances'
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
+        dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
+        image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/ms-lanchonetedarua-pagamento:${{ github.sha }}
+        registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        name: fiapigrupo23
+        location: 'South Central US'
+      
