@@ -9,6 +9,9 @@ micronaut:
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
+  jms:
+    sqs:
+      enabled: true
 
 datasources:
   default:
@@ -24,3 +27,8 @@ jpa:
         hbm2ddl:
           auto: update
         show_sql: true
+
+aws:
+  region: us-east-1
+  access-key-id: ${AWS_ACCESS_KEY_ID}
+  secret-key: ${AWS_SECRET_KEY}
