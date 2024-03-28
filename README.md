@@ -41,3 +41,8 @@ Este é um microserviço de pagamentos para a Lanchonete da Rua, construído com
    export JDBC_USER=lanchonetedaruapagamento
    export JDBC_PASSWORD=lanchonetedaruapagamento
    export JDBC_DRIVER=org.postgresql.Driver
+
+
+5. **SQS**
+   
+   Para conectar com SQS é necessário ter as seguintes variáveis de ambiente declaradas `AWS_ACCESS_KEY_ID` e `AWS_SECRET_KEY`

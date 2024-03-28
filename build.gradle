@@ -15,11 +15,12 @@ repositories {
 dependencies {
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("io.micronaut:micronaut-jackson-databind")
+    implementation("jakarta.annotation:jakarta.annotation-api")
     compileOnly("io.micronaut:micronaut-http-client")
     compileOnly("io.micronaut:micronaut-http-validation")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
     runtimeOnly("ch.qos.logback:logback-classic")
-    testImplementation("io.micronaut:micronaut-http-client")
     runtimeOnly("org.yaml:snakeyaml")
 
     // swagger
@@ -34,7 +35,12 @@ dependencies {
     implementation("jakarta.persistence:jakarta.persistence-api:2.2.3")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
 
+    //sqs
+    implementation("io.micronaut.jms:micronaut-jms-sqs:3.3.0")
+    implementation("com.amazonaws:aws-java-sdk-sqs")
+
     //testing
+    testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("io.micronaut.test:micronaut-test-rest-assured")
 }
 
